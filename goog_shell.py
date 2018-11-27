@@ -28,12 +28,10 @@ class goog_shell:
             # list folders and files differently
             if file1['mimeType'] == "application/vnd.google-apps.folder":
                 self.folder_list.append(file1['title'])
-                #print "[{}] folder: {}, mimetype: {}".format(self.folder_list.index(file1['title'].encode("utf-8")), file1['title'].encode("utf-8"), file1['mimeType'])
                 print "[{}] folder: {}".format(self.folder_list.index(file1['title'].encode("utf-8")), file1['title'].encode("utf-8"))
 
             else:
                 self.files_list.append(file1['title'])
-                #print "[{}] file: {}, mimetype: {}".format(self.files_list.index(file1['title']),file1['title'].encode("utf-8"), file1['mimeType'])
                 print "[{}] file: {}".format(self.files_list.index(file1['title']),file1['title'].encode("utf-8"))
                 
             self.place_holder_dict[file1['title']] = file1['id']
@@ -79,6 +77,22 @@ class goog_shell:
 
     def localcwd(self):
         print os.getcwd()
+
+    def get_all(self):
+        file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
+        
+        for file1 in file_list:
+            created_file = self.drive.CreateFile({'id': file1['id']})
+            try:
+                created_file.GetContentFile("files/" + file1['title'])
+                print "Downloading: {}".format(file1['title'].encode('utf-8'))
+            except:
+                mime_type = self.mimetype_dict[created_file['mimeType']]
+                created_file.GetContentFile("files/" + target_file, mimetype=mime_type)
+                print "Downloading: {}".format(file1['title'].encode('utf-8'))
+            if file1['mimeType'] == "application/vnd.google-apps.folder":
+                print "Ignoring folder"
+
             
 
             
