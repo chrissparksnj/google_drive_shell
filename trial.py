@@ -1,5 +1,4 @@
 import json
-from bcolors import *
 import goog_shell
 import directions
 instructions = directions.directions()
