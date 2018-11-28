@@ -18,13 +18,12 @@ while True:
         else:
             shell.list_directory()
     if 'cd' in user_command:
+        if user_command == "lcd":
+            pass
         if len(user_command.split()) < 2:
             target_dir = 'root'
         else:
-            if user_command.split()[0] == "lcd":
-                pass
-            else:
-                target_dir = user_command.split()[1]
+            target_dir = user_command.split()[1]
         shell.change_directory(target_dir)
     if 'get' in user_command:
         if len(user_command.split()) < 2:
@@ -36,9 +35,13 @@ while True:
         shell.local_list()
     if user_command == "lcd":
         directory = user_command.split()[1]
-        shell.get(self, directory)
+        shell.local_change_dir(directory)
     if user_command == "lpwd":
         shell.localcwd()
+    if user_command == "downloadall":
+        shell.get_all()
+    if user_command == "exit":
+        exit(0)
         
             
         

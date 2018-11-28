@@ -90,8 +90,7 @@ class goog_shell:
                 mime_type = self.mimetype_dict[created_file['mimeType']]
                 created_file.GetContentFile("files/" + target_file, mimetype=mime_type)
                 print "Downloading: {}".format(file1['title'].encode('utf-8'))
-            if file1['mimeType'] == "application/vnd.google-apps.folder":
-                print "Ignoring folder"
+                
 
             
 
