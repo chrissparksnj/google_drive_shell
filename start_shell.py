@@ -4,12 +4,17 @@ import directions
 instructions = directions.directions()
 shell = goog_shell.goog_shell()
 
-print "Type h for available options: "
+print " 'h' for available options "
+print " 'see'  for examples "
+print " 'exit' to quit"
+
 
 while True:
     user_command = raw_input('>> ')
     if user_command == 'h':
         instructions.help_goog()
+    if user_command == 'see':
+        instructions.see()
     if 'ls' in user_command:
         if user_command.split()[0] == "lls":
             pass
