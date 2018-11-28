@@ -2,3 +2,5 @@ files/
 *.json
 *.pyc
 files.old/
+*.yml
+*.gif
