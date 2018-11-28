@@ -116,14 +116,27 @@ class goog_shell:
         a['title'] = new_name
         update=self.drive.auth.service.files().update(fileId=file_id,body=a).execute()
 
+    def remove(self, target_file):
+        file_title = self.files_list[int(target_file)]
+        file_id = self.place_holder_dict[file_title]
+        a=self.drive.auth.service.files().delete(fileId=file_id).execute()
+        print "Deleted File: {}".format(file_title.encode('utf-8'))
+
+    def remove_all(self):
+        file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
+        for file1 in file_list:
+            file_id = file1['id']
+            a=self.drive.auth.service.files().delete(fileId=file_id).execute()
+            print "Deleted file: {}".format(file1['title'].encode('utf-8'))
+            
 
         
+
         
                 
 
             
 
             
-
-        
+      
         

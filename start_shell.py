@@ -50,6 +50,23 @@ while True:
             originalfile = user_command.split()[1]
             newfile = user_command.split()[2]
             shell.rename(originalfile, newfile)
+    if "remove" in user_command:
+        if len(user_command.split()) < 2:
+            print "You must specify file to delete"
+        else:
+            target_file = user_command.split()[1]
+            remove_prompt = raw_input("Are you sure you want to delete the following file? y or n: {} ".format(int(target_file)))
+            if remove_prompt == "y":
+                shell.remove(target_file)
+            else:
+                print "Failed to remove file: user selected n at prompt"
+    if "deleteall" in user_command:
+        remove_prompt = raw_input("Are you sure you want to delete all files in this directory?: y or n")
+        if remove_prompt == "y":
+            shell.remove_all()
+        else:
+            print "Failed to initiate destruction: user selected n at prompt"
+                
     if user_command == "exit":
         exit(0)
         
