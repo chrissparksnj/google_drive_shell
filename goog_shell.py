@@ -5,6 +5,7 @@ class goog_shell:
     place_holder_dict = {}
     folder_list = []
     files_list = []
+    
     last_dir = ''
     current_dir = 'root'
     mimetype_dict = {
@@ -19,6 +20,14 @@ class goog_shell:
         self.drive = GoogleDrive(self.gauth) 
         self.gauth.LocalWebserverAuth()
         
+    def load_files_into_memory(self):
+        file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
+        for file1 in file_list:
+            if file1['mimeType'] == "application/vnd.google-apps.folder":
+                folder_list.append(file1['title'])
+            else:
+                file_list.append(file1['title'])
+            
         
 
     def list_directory(self):
@@ -90,6 +99,26 @@ class goog_shell:
                 mime_type = self.mimetype_dict[created_file['mimeType']]
                 created_file.GetContentFile("files/" + target_file, mimetype=mime_type)
                 print "Downloading: {}".format(file1['title'].encode('utf-8'))
+
+    def rename(self, target_file, new_name):
+        """ Look up target file in files list by index """
+        
+        file_title = self.files_list[int(target_file)] # returns file title: "Untitled spreadsheet"
+        #print file_title
+        """ Take target file name and get ID out of place_holder_dict """ # returns file id: 1TKD2I5uMq9ExzT0WQLS2q6WeQOLT7zl-KaZF1_elpnE
+        file_id = self.place_holder_dict[file_title]
+        #print file_id
+        """ Create file instance """
+        #file1 = self.drive.CreateFile({ "id":file_id })
+        #print file1['title']
+        #print file1.Upload()
+        a=self.drive.auth.service.files().get(fileId=file_id).execute()
+        a['title'] = new_name
+        update=self.drive.auth.service.files().update(fileId=file_id,body=a).execute()
+
+
+        
+        
                 
 
             

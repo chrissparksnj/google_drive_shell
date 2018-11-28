@@ -7,8 +7,6 @@ shell = goog_shell.goog_shell()
 print "Type h for available options: "
 
 while True:
-    #print "Current Directory: " + shell.current_dir
-    #print "Last Directory: " + shell.last_dir
     user_command = raw_input('>> ')
     if user_command == 'h':
         instructions.help_goog()
@@ -40,6 +38,13 @@ while True:
         shell.localcwd()
     if user_command == "downloadall":
         shell.get_all()
+    if "rename" in user_command:
+        if len(user_command.split()) == 1:
+            print "Please select old file, and supply new name. EG: 0 newfile.txt"
+        else:
+            originalfile = user_command.split()[1]
+            newfile = user_command.split()[2]
+            shell.rename(originalfile, newfile)
     if user_command == "exit":
         exit(0)
         
