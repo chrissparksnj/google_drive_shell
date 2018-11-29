@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import json
 import goog_shell
 import directions
@@ -7,7 +8,6 @@ shell = goog_shell.goog_shell()
 print " 'h' for available options "
 print " 'see'  for examples "
 print " 'exit' to quit"
-
 
 while True:
     user_command = raw_input('>> ')
