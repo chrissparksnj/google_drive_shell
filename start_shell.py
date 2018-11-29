@@ -23,7 +23,7 @@ while True:
     if 'cd' in user_command:
         if user_command == "lcd":
             pass
-        if len(user_command.split()) < 2:
+        if len(user_command.split()) < 2: 
             target_dir = 'root'
         else:
             target_dir = user_command.split()[1]
