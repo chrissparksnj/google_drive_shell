@@ -128,6 +128,17 @@ class goog_shell:
             file_id = file1['id']
             a=self.drive.auth.service.files().delete(fileId=file_id).execute()
             print "Deleted file: {}".format(file1['title'].encode('utf-8'))
+    
+    def upload(self, file_name):
+        ''' takes name of file you want to upload: eg upload('file.txt') '''
+        url = os.getcwd()
+        full_url = str(url) + "/" + str(file_name)
+        #print full_url
+        file1 = self.drive.CreateFile({'title':file_name})
+        file1.SetContentFile(full_url)
+        file1.Upload()
+        print "Uploaded {}".format(full_url.encode('utf-8'))
+
             
 
         

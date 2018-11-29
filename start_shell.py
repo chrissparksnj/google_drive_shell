@@ -66,6 +66,12 @@ while True:
             shell.remove_all()
         else:
             print "Failed to initiate destruction: user selected n at prompt"
+    if "upload" in user_command:
+        if len(user_command.split()) < 2:
+            print "Please specify the filename"
+        else:
+            file_name = user_command.split()[1]
+            shell.upload(file_name)
                 
     if user_command == "exit":
         exit(0)

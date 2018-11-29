@@ -12,7 +12,8 @@ class directions:
         print "'see'                  <-- shows examples of how to use commands"
         print "'lpwd'                 <-- prints local working directory"
         print "'lls'                  <-- lists local directory"
-        print "'lcd <filename>'       <-- changes local directory"
+        print "'lcd <directory_name>' <-- changes local directory"
+        print "'upload <filename>     <-- uploads local file to drive"
   
     def see(self):
         print "cd:  cd 3"
@@ -20,4 +21,5 @@ class directions:
         print "remove: remove 4"
         print "'deleteall'"
         print "lcd : lcd /"
+        print "upload: upload file_name.txt"
         print "rename: rename 0 newfile.txt"

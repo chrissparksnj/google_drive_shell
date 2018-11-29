@@ -10,7 +10,8 @@
 * 'see'                  **shows examples of how to use commands**
 * 'lls'                  **lists local directory**
 * 'lcd'                  **changes local directory**
-* 'lpwd'                 **prints current local directory**   
+* 'lpwd'                 **prints current local directory** 
+* 'upload'               **uploads local file**  
 
 ![Alt Text](https://i.imgur.com/ej1ymvQ.gif)
 
