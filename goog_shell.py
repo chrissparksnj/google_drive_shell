@@ -19,6 +19,13 @@ class goog_shell:
         self.gauth = GoogleAuth()
         self.drive = GoogleDrive(self.gauth) 
         self.gauth.LocalWebserverAuth()
+    
+    def convert(self, file_descriptor):
+        ''' takes user input in form of int, gets name, and uses name to get id from dict'''
+        file_title = self.files_list[int(file_descriptor)] # returns file title: "Untitled spreadsheet"
+        file_id = self.place_holder_dict[file_title]       # returns file id: 1TKD2I5uMq9ExzT0WQLS2q6WeQOLT7zl-KaZF1_elpnE
+        return file_id
+
         
     def load_files_into_memory(self):
         file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
@@ -102,16 +109,12 @@ class goog_shell:
 
     def rename(self, target_file, new_name):
         """ Look up target file in files list by index """
-        
         file_title = self.files_list[int(target_file)] # returns file title: "Untitled spreadsheet"
-        #print file_title
+
         """ Take target file name and get ID out of place_holder_dict """ # returns file id: 1TKD2I5uMq9ExzT0WQLS2q6WeQOLT7zl-KaZF1_elpnE
         file_id = self.place_holder_dict[file_title]
-        #print file_id
+
         """ Create file instance """
-        #file1 = self.drive.CreateFile({ "id":file_id })
-        #print file1['title']
-        #print file1.Upload()
         a=self.drive.auth.service.files().get(fileId=file_id).execute()
         a['title'] = new_name
         update=self.drive.auth.service.files().update(fileId=file_id,body=a).execute()
@@ -133,13 +136,26 @@ class goog_shell:
         ''' takes name of file you want to upload: eg upload('file.txt') '''
         url = os.getcwd()
         full_url = str(url) + "/" + str(file_name)
-        #print full_url
         file1 = self.drive.CreateFile({'title':file_name})
         file1.SetContentFile(full_url)
         file1.Upload()
         print "Uploaded {}".format(full_url.encode('utf-8'))
+    
+    def touch(self, file_name):
+        file1 = self.drive.CreateFile({'title': file_name})
+        file1.Upload()
+        print "Uploaded {}".format(file_name)
 
-            
+    def cat(self, index):
+        file_id = self.convert(index)
+        try:
+            file1 = self.drive.auth.service.files().get_media(fileId=file_id).execute()
+            print file1
+        except Exception as e:
+            print "Couldn't see contents of file. Try downloading first"
+            print "----------------------"
+            print e
+            print "----------------------"            
 
         
 

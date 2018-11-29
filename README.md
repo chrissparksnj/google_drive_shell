@@ -9,9 +9,11 @@
 * 'deleteall'            **deletes all files in current working directory**
 * 'see'                  **shows examples of how to use commands**
 * 'lls'                  **lists local directory**
-* 'lcd'                  **changes local directory**
+* 'localdir'             **changes local directory**
 * 'lpwd'                 **prints current local directory** 
 * 'upload'               **uploads local file**  
+* 'touch'                **creates new empty file on drive**
+* 'cat' <number>         **shows files contents**
 
 ![Alt Text](https://i.imgur.com/ej1ymvQ.gif)
 

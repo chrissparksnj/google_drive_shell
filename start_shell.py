@@ -36,9 +36,6 @@ while True:
             shell.get_file(file_descriptor)
     if user_command == "lls":
         shell.local_list()
-    if user_command == "lcd":
-        directory = user_command.split()[1]
-        shell.local_change_dir(directory)
     if user_command == "lpwd":
         shell.localcwd()
     if user_command == "downloadall":
@@ -65,13 +62,27 @@ while True:
         if remove_prompt == "y":
             shell.remove_all()
         else:
-            print "Failed to initiate destruction: user selected n at prompt"
+            print "Failed to initiate destruction: uslser selected n at prompt"
     if "upload" in user_command:
         if len(user_command.split()) < 2:
             print "Please specify the filename"
         else:
             file_name = user_command.split()[1]
             shell.upload(file_name)
+    if "touch" in user_command:
+        if len(user_command.split()) < 2:
+            print "Please add a file name for your new file: eg 'touch test.txt'"
+        else:
+            file_name = user_command.split()[1]
+            shell.touch(file_name)
+    if "cat" in user_command:
+        if len(user_command.split()) < 2:
+            print "Please enter file number to see its contents"
+        else:
+            shell.cat(user_command.split()[1])
+    if "localdir" in user_command:
+        directory = user_command.split()[1]
+        shell.local_change_dir(directory)
                 
     if user_command == "exit":
         exit(0)
