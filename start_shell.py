@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import readline
 import json
 import goog_shell
 import directions
@@ -9,7 +10,11 @@ print " 'h' for available options "
 print " 'see'  for examples "
 print " 'exit' to quit"
 
+
+
 while True:
+    readline.parse_and_bind("tab: complete")
+    readline.set_completer(shell.complete)
     user_command = raw_input('>> ')
     tokenized = user_command.split()
     token_one = user_command.split()[0]
@@ -21,10 +26,14 @@ while True:
             shell.list_directory()
     if token_one == "cd":
         if len(user_command.split()) < 2: 
-            target_dir = 'root'
+            shell.change_directory('root')
         else:
-            target_dir = user_command.split()[1]
-        shell.change_directory(target_dir)
+            try:
+                input_command = user_command.split()[1]
+                shell.change_directory(input_command)
+            except:
+                print "Ensure file descriptor is a number"
+
     if 'get' in user_command:
         if len(user_command.split()) < 2:
             print "Please specify file descriptor. EG: get 1"
@@ -39,6 +48,8 @@ while True:
         shell.get_all()
     if token_one == "lcd":
         shell.local_change_dir(tokenized[1])
+    if token_one == "pwd":
+        shell.print_working_directory()
     if token_one == "rename":
         if len(user_command.split()) == 1:
             print "Please select old file, and supply new name. EG: 0 newfile.txt"
@@ -79,9 +90,11 @@ while True:
             print "Please enter file number to see its contents"
         else:
             shell.cat(user_command.split()[1])
-    if token_one == "localdir":
-        directory = user_command.split()[1]
-        shell.local_change_dir(directory)
+    if token_one == "mkdir":
+        if len(user_command.split()) < 2:
+            print "Please specify a file name: eg 'mkdir testfolder'"
+        else:
+            shell.make_directory(user_command.split()[1])
 
                 
     if user_command == "exit":
