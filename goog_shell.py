@@ -12,6 +12,10 @@ class goog_shell:
         "application/vnd.google-apps.document" : 'application/pdf',
         'application/vnd.google-apps.spreadsheet': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         }
+    mimetype_reverse = {
+        'application/pdf' : "application/vnd.google-apps.document",
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/vnd.google-apps.spreadsheet'
+    }
 
     def __init__(self):
         from pydrive.drive import GoogleDrive
@@ -80,8 +84,9 @@ class goog_shell:
         try:
             created_file.GetContentFile("files/" + target_file)
         except:
-            mime_type = self.mimetype_dict[created_file['mimeType']]
-            created_file.GetContentFile("files/" + target_file, mimetype=mime_type)
+            mime_type = self.mimetype_reverse[created_file['mimeType'].encode('utf-8')]
+            created_file.GetContentFile("files/" + target_file, mimetype = mime_type)
+            
 
     def local_list(self):
         cur_dir = os.listdir('.')
@@ -89,7 +94,10 @@ class goog_shell:
             print file1
 
     def local_change_dir(self, directory):
-        os.chdir(directory)
+        root = os.getcwd()
+        target_dir = root + "/" + directory
+        print target_dir
+        os.chdir(target_dir)
 
     def localcwd(self):
         print os.getcwd()
@@ -108,6 +116,7 @@ class goog_shell:
                 print "Downloading: {}".format(file1['title'].encode('utf-8'))
 
     def rename(self, target_file, new_name):
+
         """ Look up target file in files list by index """
         file_title = self.files_list[int(target_file)] # returns file title: "Untitled spreadsheet"
 
@@ -115,7 +124,7 @@ class goog_shell:
         file_id = self.place_holder_dict[file_title]
 
         """ Create file instance """
-        a=self.drive.auth.service.files().get(fileId=file_id).execute()
+        a = self.drive.auth.service.files().get(fileId=file_id).execute()
         a['title'] = new_name
         update=self.drive.auth.service.files().update(fileId=file_id,body=a).execute()
 

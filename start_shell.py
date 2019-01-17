@@ -11,18 +11,15 @@ print " 'exit' to quit"
 
 while True:
     user_command = raw_input('>> ')
-    if user_command == 'h':
+    tokenized = user_command.split()
+    token_one = user_command.split()[0]
+    if token_one == 'h':
         instructions.help_goog()
-    if user_command == 'see':
+    if token_one == "see":
         instructions.see()
-    if 'ls' in user_command:
-        if user_command.split()[0] == "lls":
-            pass
-        else:
+    if token_one == "ls":
             shell.list_directory()
-    if 'cd' in user_command:
-        if user_command == "lcd":
-            pass
+    if token_one == "cd":
         if len(user_command.split()) < 2: 
             target_dir = 'root'
         else:
@@ -34,20 +31,22 @@ while True:
         if len(user_command.split()) == 2:
             file_descriptor = user_command.split()[1]
             shell.get_file(file_descriptor)
-    if user_command == "lls":
+    if token_one == "lls":
         shell.local_list()
-    if user_command == "lpwd":
+    if token_one == "lpwd":
         shell.localcwd()
-    if user_command == "downloadall":
+    if token_one == "downloadall":
         shell.get_all()
-    if "rename" in user_command:
+    if token_one == "lcd":
+        shell.local_change_dir(tokenized[1])
+    if token_one == "rename":
         if len(user_command.split()) == 1:
             print "Please select old file, and supply new name. EG: 0 newfile.txt"
         else:
             originalfile = user_command.split()[1]
             newfile = user_command.split()[2]
             shell.rename(originalfile, newfile)
-    if "remove" in user_command:
+    if token_one == "rm":
         if len(user_command.split()) < 2:
             print "You must specify file to delete"
         else:
@@ -57,32 +56,33 @@ while True:
                 shell.remove(target_file)
             else:
                 print "Failed to remove file: user selected n at prompt"
-    if "deleteall" in user_command:
+    if token_one == "deleteall":
         remove_prompt = raw_input("Are you sure you want to delete all files in this directory?: y or n")
         if remove_prompt == "y":
             shell.remove_all()
         else:
             print "Failed to initiate destruction: uslser selected n at prompt"
-    if "upload" in user_command:
+    if token_one == "upload":
         if len(user_command.split()) < 2:
             print "Please specify the filename"
         else:
             file_name = user_command.split()[1]
             shell.upload(file_name)
-    if "touch" in user_command:
+    if token_one == "touch":
         if len(user_command.split()) < 2:
             print "Please add a file name for your new file: eg 'touch test.txt'"
         else:
             file_name = user_command.split()[1]
             shell.touch(file_name)
-    if "cat" in user_command:
+    if token_one == "cat":
         if len(user_command.split()) < 2:
             print "Please enter file number to see its contents"
         else:
             shell.cat(user_command.split()[1])
-    if "localdir" in user_command:
+    if token_one == "localdir":
         directory = user_command.split()[1]
         shell.local_change_dir(directory)
+
                 
     if user_command == "exit":
         exit(0)
