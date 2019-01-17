@@ -16,6 +16,8 @@ class goog_shell:
     last_dir = ''
     current_dir = 'root'
 
+    wd_files = {}
+
     local_last_dir = ''
     local_current_dir = '.'
     mimetype_dict = {
@@ -53,6 +55,16 @@ class goog_shell:
         return file_id
     
     def load_files_into_memory(self):
+
+        # clear out files
+        self.folder_list = []
+        self.files_list = []
+        self.reverse_folders_dict = {}
+        self.reverse_files_dict = {}
+        self.files_dict = {}
+        self.folders_dict = {}
+        self.all_items = []
+
         file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
         for file1 in file_list:
             self.all_items.append(file1['title'])
@@ -65,18 +77,20 @@ class goog_shell:
                 self.files_list.append(file1['title'])
                 self.files_dict[file1['title']] = file1['id']
                 self.reverse_files_dict[file1['id']] = file1['title']
+        #print self.files_dict
 
     def list_directory(self):
+        self.load_files_into_memory()
         file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
         for file1 in file_list:
             # list folders and files differently
             if file1['mimeType'] == "application/vnd.google-apps.folder":
                 self.folder_list.append(file1['title'])
-                print "[{}] folder: {}".format(self.folder_list.index(file1['title'].encode("utf-8")), file1['title'].encode("utf-8"))
+                print "folder: {}".format(file1['title'].encode("utf-8"))
 
             else:
                 self.files_list.append(file1['title'])
-                print "[{}] file: {}".format(self.files_list.index(file1['title']),file1['title'].encode("utf-8"))
+                print "file: {}".format(file1['title'].encode("utf-8"))
                 
             self.place_holder_dict[file1['title']] = file1['id']
 
@@ -99,9 +113,9 @@ class goog_shell:
         """ uses index passed by user to look up name in folder_list """
         """ uses name to get ID in place_holder_list """
         # self.current_dir = self.place_holder_dict[self.folder_list[int(target_dir)]]
-        print self.current_dir
-        print self.last_dir
+
         self.current_dir = self.folders_dict[target_dir]
+        self.load_files_into_memory()
     
     def local_change_dir(self, directory):
         if self.local_current_dir == '':
@@ -128,8 +142,6 @@ class goog_shell:
         cur_dir = os.listdir('.')
         for file1 in cur_dir:
             print file1
-
-
 
     def localcwd(self):
         print os.getcwd()
@@ -192,7 +204,7 @@ class goog_shell:
                 }]
             })
         file1.Upload()
-        print "Uploaded {}".format(file_name)
+        print "Created {}".format(file_name)
 
     def cat(self, index):
         file_id = self.convert(index)

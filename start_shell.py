@@ -104,8 +104,9 @@ while True:
         print "Error written in error.log"
         print e
         f = open('error.log', 'wa+')
-        f.write("Usercommand: " + user_command)
-        f.write("Error message: " + str(e))
+        f.write("Usercommand: " + user_command + "\n")
+        f.write("Error message: " + str(e) + "\n")
+        f.write("-----------------------" + "\n")
         f.close()
         
             
