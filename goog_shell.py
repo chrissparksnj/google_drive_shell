@@ -162,15 +162,18 @@ class goog_shell:
     def rename(self, target_file, new_name):
 
         """ Look up target file in files list by index """
-        file_title = self.files_list[int(target_file)] # returns file title: "Untitled spreadsheet"
-
+        #file_title = self.files_list[int(target_file)] # returns file title: "Untitled spreadsheet"
+        
         """ Take target file name and get ID out of place_holder_dict """ # returns file id: 1TKD2I5uMq9ExzT0WQLS2q6WeQOLT7zl-KaZF1_elpnE
-        file_id = self.place_holder_dict[file_title]
+        #file_id = self.place_holder_dict[file_title]
+
+        file_id = self.files_dict[target_file]
 
         """ Create file instance """
         a = self.drive.auth.service.files().get(fileId=file_id).execute()
         a['title'] = new_name
         self.drive.auth.service.files().update(fileId=file_id,body=a).execute()
+        print "Renamed file {} to {}".format(target_file, new_name)
 
     def remove(self, target_file):
         file_id = self.files_dict[target_file]
@@ -225,6 +228,10 @@ class goog_shell:
 
     def echo(self, string, file_name):
         pass
+
+    def rmdir(self, folder):
+        self.drive.auth.service.files().delete(fileId=self.folders_dict[folder]).execute()
+        print "Removed folder: " + str(folder)
 
 
 

@@ -3,6 +3,7 @@ import readline
 import json
 import goog_shell
 import directions
+import os
 instructions = directions.directions()
 shell = goog_shell.goog_shell()
 
@@ -25,6 +26,8 @@ while True:
             instructions.see()
         if token_one == "ls":
                 shell.list_directory()
+        if token_one == "clear":
+            os.system('clear')
         if token_one == "cd":
             if len(user_command.split()) < 2: 
                 shell.change_directory('root')
@@ -34,8 +37,7 @@ while True:
                     shell.change_directory(input_command)
                 except:
                     print "Ensure file descriptor is a number"
-
-        if 'get' in user_command:
+        if token_one == "get":
             if len(user_command.split()) < 2:
                 print "Please specify file descriptor. EG: get 1"
             if len(user_command.split()) == 2:
@@ -73,7 +75,7 @@ while True:
             if remove_prompt == "y":
                 shell.remove_all()
             else:
-                print "Failed to initiate destruction: uslser selected n at prompt"
+                print "Failed to initiate destruction: user selected n at prompt"
         if token_one == "upload":
             if len(user_command.split()) < 2:
                 print "Please specify the filename"
@@ -96,9 +98,10 @@ while True:
                 print "Please specify a file name: eg 'mkdir testfolder'"
             else:
                 shell.make_directory(user_command.split()[1])
-
-                    
-        if user_command == "exit":
+        if token_one == "rmdir":
+            shell.rmdir(user_command.split()[1])
+        if token_one == "exit":
+        
             exit(0)
     except Exception, e:
         print "Error written in error.log"
