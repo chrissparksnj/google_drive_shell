@@ -2,6 +2,7 @@ import os
 
 class goog_shell:
 
+    all_items = []
     place_holder_dict = {}
     folder_list = []
     files_list = []
@@ -14,6 +15,9 @@ class goog_shell:
 
     last_dir = ''
     current_dir = 'root'
+
+    local_last_dir = ''
+    local_current_dir = '.'
     mimetype_dict = {
         "application/vnd.google-apps.document" : 'application/pdf',
         'application/vnd.google-apps.spreadsheet': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -32,10 +36,13 @@ class goog_shell:
         self.load_files_into_memory()
     
     def print_working_directory(self):
-        print self.current_dir
+        if self.current_dir == 'root':
+            print 'Current working directory: root'
+        else:
+            print "Current Working Directory: " + str(self.reverse_folders_dict[self.current_dir])
 
     def complete(self, text, state):
-        files = self.files_list
+        files = self.all_items
         results = [x for x in files if x.startswith(text)] + [None]
         return results[state]
     
@@ -48,6 +55,7 @@ class goog_shell:
     def load_files_into_memory(self):
         file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
         for file1 in file_list:
+            self.all_items.append(file1['title'])
             self.files_dict[file1['mimeType']] = file1['title']
             if file1['mimeType'] == "application/vnd.google-apps.folder":
                 self.folder_list.append(file1['title'])
@@ -57,9 +65,6 @@ class goog_shell:
                 self.files_list.append(file1['title'])
                 self.files_dict[file1['title']] = file1['id']
                 self.reverse_files_dict[file1['id']] = file1['title']
-
-        print self.files_dict
-        print self.reverse_files_dict
 
     def list_directory(self):
         file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
@@ -94,7 +99,20 @@ class goog_shell:
         """ uses index passed by user to look up name in folder_list """
         """ uses name to get ID in place_holder_list """
         # self.current_dir = self.place_holder_dict[self.folder_list[int(target_dir)]]
+        print self.current_dir
+        print self.last_dir
         self.current_dir = self.folders_dict[target_dir]
+    
+    def local_change_dir(self, directory):
+        if self.local_current_dir == '':
+            self.local_current_dir = os.getcwd()
+        if directory == "..":
+            self.local_current_dir = self.local_last_dir
+            os.chdir(self.local_last_dir)
+        
+        self.local_last_dir = self.local_current_dir
+        self.current_dir = directory
+        os.chdir(directory)
            
     def get_file(self, target_file):
         file_id = self.files_dict[target_file]
@@ -111,11 +129,7 @@ class goog_shell:
         for file1 in cur_dir:
             print file1
 
-    def local_change_dir(self, directory):
-        root = os.getcwd()
-        target_dir = root + "/" + directory
-        print target_dir
-        os.chdir(target_dir)
+
 
     def localcwd(self):
         print os.getcwd()
@@ -147,9 +161,11 @@ class goog_shell:
         self.drive.auth.service.files().update(fileId=file_id,body=a).execute()
 
     def remove(self, target_file):
-        file_title = self.files_list[int(target_file)]
-        file_id = self.place_holder_dict[file_title]
-        a=self.drive.auth.service.files().delete(fileId=file_id).execute()
+        file_id = self.files_dict[target_file]
+        file_title = target_file
+        #file_title = self.files_list[int(target_file)]
+        #file_id = self.place_holder_dict[file_title]
+        self.drive.auth.service.files().delete(fileId=file_id).execute()
         print "Deleted File: {}".format(file_title.encode('utf-8'))
 
     def remove_all(self):
@@ -194,6 +210,9 @@ class goog_shell:
         folder = self.drive.CreateFile(folder_metadata)
         folder.Upload()
         print "Made new directory: {}".format(folder['title'])
+
+    def echo(self, string, file_name):
+        pass
 
 
 
