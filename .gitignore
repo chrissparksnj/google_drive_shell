@@ -3,6 +3,6 @@ files/
 *.pyc
 files.old/
 *.yml
-*.gif
+
 *~
 *.log
