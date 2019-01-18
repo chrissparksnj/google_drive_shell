@@ -14,7 +14,8 @@ class goog_shell:
     reverse_files_dict = {} # stored like: {'19eN8iy1jJzcICyDz8rLsiivrhb7izv2D': u'linux advanced.zip'}
 
     last_dir = ''
-    current_dir = 'root'
+    current_dir = 'root' # stores hash string like 19eN8iy1jJzcICyDz8rLsiivrhb7izv2D unless root dir
+    pretty_cur_dir = 'root'
 
     wd_files = {}
 
@@ -38,12 +39,8 @@ class goog_shell:
         self.load_files_into_memory()
     
     def print_working_directory(self):
-        if self.current_dir == 'root':
-            print 'Current working directory: root'
-        else:
-            print self.current_dir
-            print "Current Working Directory: " + str(self.reverse_folders_dict[self.current_dir])
-
+        print "Current working directory: " + self.pretty_cur_dir
+       
     def complete(self, text, state):
         files = self.all_items
         results = [x for x in files if x.startswith(text)] + [None]
@@ -79,7 +76,6 @@ class goog_shell:
                 self.files_dict[file1['title']] = file1['id']
                 self.reverse_files_dict[file1['id']] = file1['title']
         #print self.files_dict
-        print self.reverse_folders_dict
 
     def list_directory(self):
         self.load_files_into_memory()
@@ -97,6 +93,7 @@ class goog_shell:
             self.place_holder_dict[file1['title']] = file1['id']
 
     def change_directory(self, target_dir):
+        self.pretty_cur_dir = target_dir
         """ Target dir will be a number """
         # goes back one file with .. 
         if target_dir == '..':
@@ -150,7 +147,6 @@ class goog_shell:
 
     def get_all(self):
         file_list = self.drive.ListFile({'q':"'{}' in parents".format(self.current_dir)}).GetList()
-        
         for file1 in file_list:
             created_file = self.drive.CreateFile({'id': file1['id']})
             try:
@@ -158,7 +154,7 @@ class goog_shell:
                 print "Downloading: {}".format(file1['title'].encode('utf-8'))
             except:
                 mime_type = self.mimetype_dict[created_file['mimeType']]
-                created_file.GetContentFile("files/" + target_file, mimetype=mime_type)
+                created_file.GetContentFile("files/" + file1['title'], mimetype=mime_type)
                 print "Downloading: {}".format(file1['title'].encode('utf-8'))
 
     def rename(self, target_file, new_name):
@@ -229,12 +225,10 @@ class goog_shell:
         print "Made new directory: {}".format(folder['title'])
         self.load_files_into_memory()
 
-
     def echo(self, string, file_name):
         pass
 
     def rmdir(self, folder):
-        print self.folders_dict[folder]
         self.drive.auth.service.files().delete(fileId=self.folders_dict[folder]).execute()
         print "Removed folder: " + str(folder)
 

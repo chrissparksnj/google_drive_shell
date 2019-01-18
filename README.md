@@ -15,5 +15,5 @@
 * 'touch'                **creates new empty file on drive**
 * 'cat' <number>         **shows files contents**
 
-![Alt Text](https://i.imgur.com/ej1ymvQ.gif)
+![Alt Text](https://i.imgur.com/A3yZrMl.mp4)
 
