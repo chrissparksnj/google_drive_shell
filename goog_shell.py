@@ -41,6 +41,7 @@ class goog_shell:
         if self.current_dir == 'root':
             print 'Current working directory: root'
         else:
+            print self.current_dir
             print "Current Working Directory: " + str(self.reverse_folders_dict[self.current_dir])
 
     def complete(self, text, state):
@@ -78,6 +79,7 @@ class goog_shell:
                 self.files_dict[file1['title']] = file1['id']
                 self.reverse_files_dict[file1['id']] = file1['title']
         #print self.files_dict
+        print self.reverse_folders_dict
 
     def list_directory(self):
         self.load_files_into_memory()
@@ -225,11 +227,14 @@ class goog_shell:
         folder = self.drive.CreateFile(folder_metadata)
         folder.Upload()
         print "Made new directory: {}".format(folder['title'])
+        self.load_files_into_memory()
+
 
     def echo(self, string, file_name):
         pass
 
     def rmdir(self, folder):
+        print self.folders_dict[folder]
         self.drive.auth.service.files().delete(fileId=self.folders_dict[folder]).execute()
         print "Removed folder: " + str(folder)
 

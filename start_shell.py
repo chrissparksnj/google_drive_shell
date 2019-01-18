@@ -11,7 +11,7 @@ print " 'h' for available options "
 print " 'see'  for examples "
 print " 'exit' to quit"
 
-
+###################### PWD NOT WORKING ################################
 
 while True:
     try:
