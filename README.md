@@ -1,6 +1,3 @@
-![Alt Text](https://i.imgur.com/sPNyLLg.gif)
-
-
 
 ### Meta Commands
 * 'h'                      **shows help**
